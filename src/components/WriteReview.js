@@ -28,6 +28,8 @@ export default function WriteReview() {
     yearStayed: false,
   });
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const dropdownRefs = {
     dormName: useRef({ button: null, dropdown: null }),
     roomType: useRef({ button: null, dropdown: null }),
@@ -167,6 +169,7 @@ export default function WriteReview() {
     e.preventDefault();
     // Handle form submission here
     console.log("Form submitted:", formData);
+    setIsSubmitted(true);
   };
 
   const renderStars = (category, currentRating) => {
@@ -193,6 +196,22 @@ export default function WriteReview() {
       </div>
     );
   };
+
+  if (isSubmitted) {
+    return (
+      <div className="write-review-wrapper">
+        <div className="thank-you-container">
+          <div className="thank-you-icon">✨</div>
+          <div>
+            <h1 className="thank-you-title">Thanks for Submitting Your Review!</h1>
+            <p className="thank-you-message">
+              You're making the process easier for everyone. Your insights help future students find their perfect home away from home.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="write-review-wrapper">

@@ -9,6 +9,56 @@
   margin: 0 auto;
 }
 
+/* Thank You Page */
+.thank-you-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 60vh;
+  background: linear-gradient(135deg, rgba(73, 15, 210, 1) 0%, rgba(93, 141, 192, 1) 48.5%, rgba(202, 188, 245, 1) 97%);
+  border-radius: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  position: relative;
+  overflow: visible;
+}
+
+.thank-you-icon {
+  font-size: 9rem;
+  margin-bottom: 2rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.thank-you-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'DM Sans', sans-serif;
+  color: rgba(255, 255, 255, 1) !important;
+  margin-bottom: 24px;
+}
+
+.thank-you-message {
+  font-size: 1.125rem;
+  font-family: 'DM Sans', sans-serif;
+  color: rgba(255, 255, 255, 1) !important;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0;
+  position: relative;
+}
+
 @media (min-width: 768px) {
   .write-review-wrapper {
     padding: 3rem 2rem;
@@ -428,6 +478,7 @@
   color: white;
   font-size: 1rem;
   font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
