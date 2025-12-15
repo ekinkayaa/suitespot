@@ -29,6 +29,7 @@ export default function WriteReview() {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const dropdownRefs = {
     dormName: useRef({ button: null, dropdown: null }),
@@ -118,6 +119,14 @@ export default function WriteReview() {
       ...prev,
       [field]: value,
     }));
+    // Clear error for this field when user starts typing/selecting
+    if (errors[field]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   const handleRatingChange = (category, rating) => {
@@ -128,6 +137,14 @@ export default function WriteReview() {
         [category]: rating,
       },
     }));
+    // Clear error for this rating when user selects a rating
+    if (errors[`ratings.${category}`]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[`ratings.${category}`];
+        return newErrors;
+      });
+    }
   };
 
   const handleFileChange = (e) => {
@@ -165,8 +182,73 @@ export default function WriteReview() {
     }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate dorm name
+    if (!formData.dormName || formData.dormName.trim() === "") {
+      newErrors.dormName = "Please select a dorm name";
+    }
+
+    // Validate room type
+    if (!formData.roomType || formData.roomType.trim() === "") {
+      newErrors.roomType = "Please select a room type";
+    }
+
+    // Validate year stayed
+    if (!formData.yearStayed || formData.yearStayed.trim() === "") {
+      newErrors.yearStayed = "Please select a year stayed";
+    }
+
+    // Validate room number
+    if (!formData.roomNumber || formData.roomNumber.trim() === "") {
+      newErrors.roomNumber = "Please enter your room number or floor";
+    }
+
+    // Validate experience
+    if (!formData.experience || formData.experience.trim() === "") {
+      newErrors.experience = "Please share your experience";
+    }
+
+    // Validate all ratings
+    const ratingCategories = [
+      "cleanliness",
+      "noiseLevel",
+      "socialLife",
+      "facilities",
+      "location",
+      "naturalLight",
+      "overall",
+    ];
+
+    ratingCategories.forEach((category) => {
+      if (!formData.ratings[category] || formData.ratings[category] === 0) {
+        newErrors[`ratings.${category}`] = `Please rate ${category === "noiseLevel" ? "noise level" : category === "socialLife" ? "social life" : category === "naturalLight" ? "natural light" : category}`;
+      }
+    });
+
+    setErrors(newErrors);
+    return { isValid: Object.keys(newErrors).length === 0, firstErrorKey: Object.keys(newErrors)[0] };
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate form before submission
+    const validation = validateForm();
+    if (!validation.isValid) {
+      // Scroll to first error after a short delay to ensure errors are rendered
+      setTimeout(() => {
+        if (validation.firstErrorKey) {
+          const element = document.querySelector(`[data-field="${validation.firstErrorKey}"]`);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }
+      }, 100);
+      return;
+    }
+
     // Handle form submission here
     console.log("Form submitted:", formData);
     setIsSubmitted(true);
@@ -226,7 +308,7 @@ export default function WriteReview() {
         <div className="form-section">
           <h2 className="section-title">Dorm Information</h2>
 
-          <div className="form-group">
+          <div className="form-group" data-field="dormName">
             <label className="form-label">
               Dorm Name <span className="required">*</span>
             </label>
@@ -237,7 +319,7 @@ export default function WriteReview() {
                   dropdownRefs.dormName.current.button = el;
                 }}
                 type="button"
-                className={`dropdown-button ${formData.dormName ? "has-value" : ""}`}
+                className={`dropdown-button ${formData.dormName ? "has-value" : ""} ${errors.dormName ? "error" : ""}`}
                 onClick={() => toggleDropdown("dormName")}
               >
                 <span>
@@ -272,9 +354,10 @@ export default function WriteReview() {
                 </div>
               )}
             </div>
+            {errors.dormName && <span className="error-message">{errors.dormName}</span>}
           </div>
 
-          <div className="form-group">
+          <div className="form-group" data-field="roomType">
             <label className="form-label">
               Room Type <span className="required">*</span>
             </label>
@@ -285,7 +368,7 @@ export default function WriteReview() {
                   dropdownRefs.roomType.current.button = el;
                 }}
                 type="button"
-                className={`dropdown-button ${formData.roomType ? "has-value" : ""}`}
+                className={`dropdown-button ${formData.roomType ? "has-value" : ""} ${errors.roomType ? "error" : ""}`}
                 onClick={() => toggleDropdown("roomType")}
               >
                 <span>
@@ -320,9 +403,10 @@ export default function WriteReview() {
                 </div>
               )}
             </div>
+            {errors.roomType && <span className="error-message">{errors.roomType}</span>}
           </div>
 
-          <div className="form-group">
+          <div className="form-group" data-field="yearStayed">
             <label className="form-label">
               Year Stayed <span className="required">*</span>
             </label>
@@ -333,7 +417,7 @@ export default function WriteReview() {
                   dropdownRefs.yearStayed.current.button = el;
                 }}
                 type="button"
-                className={`dropdown-button ${formData.yearStayed ? "has-value" : ""}`}
+                className={`dropdown-button ${formData.yearStayed ? "has-value" : ""} ${errors.yearStayed ? "error" : ""}`}
                 onClick={() => toggleDropdown("yearStayed")}
               >
                 <span>
@@ -368,35 +452,38 @@ export default function WriteReview() {
                 </div>
               )}
             </div>
+            {errors.yearStayed && <span className="error-message">{errors.yearStayed}</span>}
           </div>
 
-          <div className="form-group">
+          <div className="form-group" data-field="roomNumber">
             <label className="form-label">
               Room Number / Floor <span className="required">*</span>
             </label>
             <input
               type="text"
-              className="form-input"
+              className={`form-input ${errors.roomNumber ? "error" : ""}`}
               placeholder="Add your room or floor (e.g. 8th floor, Suite A, Room 8A10)"
               value={formData.roomNumber}
               onChange={(e) => handleInputChange("roomNumber", e.target.value)}
             />
+            {errors.roomNumber && <span className="error-message">{errors.roomNumber}</span>}
           </div>
         </div>
 
         {/* Your Experience Section */}
-        <div className="form-section">
+        <div className="form-section" data-field="experience">
           <h2 className="section-title">Your Experience</h2>
           <label className="experience-label">
             Tell us what it was like living in this dorm — the good, the bad, and everything in between. <span className="required">*</span>
           </label>
           <textarea
-            className="experience-textarea"
+            className={`experience-textarea ${errors.experience ? "error" : ""}`}
             placeholder={`What were your expectations before moving in?\nHow were the facilities (bathroom, kitchen, laundry)?\nWas it clean, quiet, or social?\nHow was the location (proximity to campus, dining, or subway)?\nHow was your floor culture or community atmosphere?\nWas it easy to study, sleep, or hang out?`}
             value={formData.experience}
             onChange={(e) => handleInputChange("experience", e.target.value)}
             rows={12}
           />
+          {errors.experience && <span className="error-message">{errors.experience}</span>}
         </div>
 
         {/* Upload Photos Section */}
@@ -473,9 +560,12 @@ export default function WriteReview() {
               { key: "naturalLight", label: "Natural Light" },
               { key: "overall", label: "Overall" },
             ].map(({ key, label }) => (
-              <div key={key} className="rating-item">
+              <div key={key} className={`rating-item ${errors[`ratings.${key}`] ? "rating-item-error" : ""}`} data-field={`ratings.${key}`}>
                 <span className="rating-label">{label}</span>
-                {renderStars(key, formData.ratings[key])}
+                <div className="rating-input-wrapper">
+                  {renderStars(key, formData.ratings[key])}
+                  {errors[`ratings.${key}`] && <span className="error-message rating-error">{errors[`ratings.${key}`]}</span>}
+                </div>
               </div>
             ))}
           </div>

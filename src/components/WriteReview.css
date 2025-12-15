@@ -180,6 +180,16 @@
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
+.form-input.error {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.form-input.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
 /* Dropdown Styles */
 .dropdown-wrapper {
   position: relative;
@@ -215,6 +225,16 @@
 .dropdown-button:focus {
   border-color: #4f46e5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.dropdown-button.error {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.dropdown-button.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 .dropdown-button.has-value {
@@ -314,6 +334,16 @@
 .experience-textarea:focus {
   border-color: #4f46e5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.experience-textarea.error {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.experience-textarea.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 /* Upload Section */
@@ -428,6 +458,13 @@
   height: fit-content;
 }
 
+.rating-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
 .rating-item:last-child {
   padding-top: 1.5rem;
   border-top: 1px solid #f1f5f9;
@@ -462,6 +499,24 @@
 
 .star-icon {
   transition: all 0.2s;
+}
+
+/* Error Messages */
+.error-message {
+  display: block;
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.rating-item-error .rating-label {
+  color: #dc2626;
+}
+
+.rating-error {
+  margin-top: 0.25rem;
+  margin-left: 0;
 }
 
 /* Submit Button */
